@@ -11,12 +11,19 @@ const supabase = require("./lib/supabase");
 const app = express();
 const pbkdf2Async = promisify(crypto.pbkdf2);
 const storageBucket = process.env.SUPABASE_STORAGE_BUCKET || "files";
-const maxUploadBytes = Number(process.env.MAX_UPLOAD_BYTES || 8 * 1024 * 1024);
+const configuredMaxUploadBytes = Number(process.env.MAX_UPLOAD_BYTES || 0);
+const hasAppUploadLimit =
+  Number.isFinite(configuredMaxUploadBytes) && configuredMaxUploadBytes > 0;
 
-const upload = multer({
+const uploadConfig = {
   storage: multer.memoryStorage(),
-  limits: { fileSize: maxUploadBytes },
-});
+};
+
+if (hasAppUploadLimit) {
+  uploadConfig.limits = { fileSize: configuredMaxUploadBytes };
+}
+
+const upload = multer(uploadConfig);
 
 const SALT_LENGTH = 16;
 const IV_LENGTH = 12;
@@ -234,9 +241,10 @@ app.post("/file/:id", async (req, res) => {
 
 app.use((error, req, res, next) => {
   if (error instanceof multer.MulterError && error.code === "LIMIT_FILE_SIZE") {
+    const maxMb = Math.floor(configuredMaxUploadBytes / 1024 / 1024);
     return res.status(413).render("index", {
       fileLink: null,
-      error: `File is too large. Max size is ${Math.floor(maxUploadBytes / 1024 / 1024)}MB.`,
+      error: `File is too large. Max size is ${maxMb}MB.`,
     });
   }
 
