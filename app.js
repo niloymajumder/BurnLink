@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { promisify } = require("util");
@@ -142,9 +143,28 @@ async function sendOneTimeFile(res, file, password) {
   return res.send(outputBuffer);
 }
 
+function resolveViewsDirectory() {
+  const candidates = [
+    path.join(process.cwd(), "views"),
+    path.join(__dirname, "views"),
+    path.join(__dirname, "..", "views"),
+    path.join(__dirname, "..", "..", "views"),
+    "/var/task/views",
+    "/var/task/src/views",
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return path.join(process.cwd(), "views");
+}
+
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", resolveViewsDirectory());
 
 app.get("/", (req, res) => {
   res.render("index", { fileLink: null, error: null });
