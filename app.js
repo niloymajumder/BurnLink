@@ -179,7 +179,7 @@ app.use((req, res, next) => {
     "default-src 'none'",
     `script-src 'self' 'nonce-${nonce}'`,
     "style-src 'unsafe-inline'",
-    "img-src 'self' blob: data:",
+    "img-src 'self' blob: data: https://api.producthunt.com",
     "media-src 'self' blob:",
     "font-src 'self'",
     "connect-src 'self'",
