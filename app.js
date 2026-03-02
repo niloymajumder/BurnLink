@@ -168,7 +168,8 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("index", { fileLink: null, error: null });
+  const error = req.query.error || null;
+  res.render("index", { fileLink: null, error });
 });
 
 app.get("/about", (req, res) => {
@@ -180,8 +181,7 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
 
   try {
     if (!req.file) {
-      return res.status(400).render("index", {
-        fileLink: null,
+      return res.status(400).json({
         error: "Please choose a file to upload.",
       });
     }
@@ -231,10 +231,7 @@ app.post("/api/upload", upload.single("file"), async (req, res) => {
 });
 
 app.post("/upload", upload.single("file"), (req, res) => {
-  return res.status(400).render("index", {
-    fileLink: null,
-    error: "This app requires JavaScript for end-to-end encryption uploads.",
-  });
+  return res.redirect("/?error=JavaScript+is+required+for+encrypted+uploads.+Please+enable+JavaScript+and+try+again.");
 });
 
 app.get("/file/:id", async (req, res) => {

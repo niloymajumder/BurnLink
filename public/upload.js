@@ -21,20 +21,14 @@
     statusEl.classList.add("error");
   }
 
-  function showLinkBox(fileId, baseUrl) {
-    var userPassword = passwordInput.value?.trim() || "";
-
-    var mode = userPassword ? 1 : 2;
+  function showLinkBox(fileId, baseUrl, hasPassword) {
     var shareUrl;
 
-    if (mode === 1) {
+    if (hasPassword) {
       shareUrl = baseUrl + "/file/" + fileId;
     } else {
-      // Recreate the link key from localStorage or generate new
-      // The key should have been generated during encryption
       var linkKey = sessionStorage.getItem("__fse_link_key_" + fileId);
       if (!linkKey) {
-        // If not found, just show without hash
         shareUrl = baseUrl + "/file/" + fileId;
       } else {
         shareUrl = baseUrl + "/file/" + fileId + "#k=" + linkKey;
@@ -183,14 +177,15 @@
       var file = fileInput.files[0];
       var fileData = await file.arrayBuffer();
       var fileDataBytes = new Uint8Array(fileData);
-      var userPassword = passwordInput.value?.trim() || "";
+      var userPassword = passwordInput.value.trim();
 
       var encryptedPayload;
       var linkKey = null;
+      var hasPassword = Boolean(userPassword);
 
       setStatus("Encrypting file in your browser...");
 
-      if (userPassword) {
+      if (hasPassword) {
         encryptedPayload = await encryptFileWithPassword(fileDataBytes, userPassword);
       } else {
         var result = await encryptFileWithLink(fileDataBytes);
@@ -217,8 +212,16 @@
       });
 
       if (!response.ok) {
-        var errorBody = await response.json();
-        throw new Error(errorBody.error || "Upload failed.");
+        var message = "Upload failed. Please try again.";
+        try {
+          var errorBody = await response.json();
+          if (errorBody && errorBody.error) {
+            message = errorBody.error;
+          }
+        } catch (e) {
+          // response was not JSON, use default message
+        }
+        throw new Error(message);
       }
 
       var result = await response.json();
@@ -227,8 +230,8 @@
         sessionStorage.setItem("__fse_link_key_" + result.id, toBase64Url(linkKey));
       }
 
-      showLinkBox(result.id, result.baseUrl);
-      setStatus("Success! Link created.");
+      showLinkBox(result.id, result.baseUrl, hasPassword);
+      setStatus("Success! Your secure link is ready.");
 
       // Reset form
       fileInput.value = "";
