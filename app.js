@@ -128,6 +128,28 @@ app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.set("views", resolveViewsDirectory());
 
+// Serve static files from public directory
+function resolvePublicDirectory() {
+  const candidates = [
+    path.join(process.cwd(), "public"),
+    path.join(__dirname, "public"),
+    path.join(__dirname, "..", "public"),
+    path.join(__dirname, "..", "..", "public"),
+    "/var/task/public",
+    "/var/task/src/public",
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  return path.join(process.cwd(), "public");
+}
+
+app.use(express.static(resolvePublicDirectory()));
+
 app.use((req, res, next) => {
   if (!canonicalUrl || !enforceCanonicalRedirect) {
     return next();

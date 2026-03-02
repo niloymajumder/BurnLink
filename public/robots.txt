@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /about
+Disallow: /file/
+Disallow: /api/
+Sitemap: https://burnlink.page/sitemap.xml

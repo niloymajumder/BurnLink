@@ -1,15 +1,31 @@
 {
-  "name": "file-sharing-server",
+  "name": "burnlink",
   "version": "1.0.0",
-  "description": "",
+  "description": "Privacy-first file sharing with end-to-end encryption",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "file-sharing",
+    "encryption",
+    "end-to-end",
+    "privacy",
+    "security",
+    "aes-gcm",
+    "one-time-links"
+  ],
+  "author": "Joy Majumdar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Joy-Majumder/BurnLink.git"
+  },
+  "homepage": "https://github.com/Joy-Majumder/BurnLink",
+  "bugs": {
+    "url": "https://github.com/Joy-Majumder/BurnLink/issues"
+  },
+  "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.49.4",
     "bcrypt": "^5.1.1",
