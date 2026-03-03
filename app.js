@@ -9,7 +9,7 @@ const File = require("./models/File");
 const { dbRateLimit } = require("./models/RateLimit");
 const supabase = require("./lib/supabase");
 
-const { uploadToStorage, downloadFromStorage, streamFromStorage, removeFromStorage, getPresignedPutUrl, getFirstBytes } = require("./lib/r2");
+const { uploadToStorage, downloadFromStorage, streamFromStorage, removeFromStorage, getPresignedPutUrl, getPresignedGetUrl, getFirstBytes } = require("./lib/r2");
 
 const app = express();
 app.disable("x-powered-by");
@@ -70,37 +70,31 @@ async function sendOneTimeEncryptedFile(res, file) {
     return res.status(410).render("not-found");
   }
 
-  // Only retrieve bytes AFTER the DB record is atomically claimed.
-  // Stream directly from R2 → client to avoid buffering the whole file in
-  // memory, which caused timeouts and false "already downloaded" errors for
-  // large files.
-  let bodyStream, contentLength;
+  // Generate a short-lived presigned GET URL so the browser downloads directly
+  // from R2.  This completely avoids serverless function timeouts on large files
+  // and eliminates the false "already used" error caused by the DB record being
+  // gone before the stream could complete.
+  const PRESIGN_TTL_SECONDS = 5 * 60; // 5 minutes
+  let downloadUrl;
   try {
-    ({ stream: bodyStream, contentLength } = await streamFromStorage(file.path));
-  } catch (storageError) {
-    // DB record is already gone; clean up storage best-effort then re-throw.
+    downloadUrl = await getPresignedGetUrl(file.path, PRESIGN_TTL_SECONDS);
+  } catch (err) {
+    // Presign failed — clean up storage and surface error.
     await removeFromStorage(file.path).catch(() => {});
-    throw storageError;
+    throw err;
   }
 
-  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
-  res.setHeader("X-File-Name", encodeURIComponent(file.originalName));
-  res.setHeader("Content-Type", "application/octet-stream");
-  if (contentLength) {
-    res.setHeader("Content-Length", contentLength);
-  }
+  // Schedule R2 cleanup one minute after the presigned URL expires so the
+  // object is always removed even if the client never downloads it.
+  setTimeout(
+    () => removeFromStorage(file.path).catch(() => {}),
+    (PRESIGN_TTL_SECONDS + 60) * 1000
+  );
 
-  // Pipe stream and clean up R2 object when done (regardless of success/error).
-  // Guard prevents double-delete if both "finish" and "close" fire.
-  bodyStream.pipe(res);
-  let cleaned = false;
-  const cleanup = () => {
-    if (cleaned) return;
-    cleaned = true;
-    removeFromStorage(file.path).catch(() => {});
-  };
-  res.on("finish", cleanup);
-  res.on("close", cleanup);  // client disconnected early
+  return res.json({
+    downloadUrl,
+    fileName: file.originalName,
+  });
 }
 
 function getActiveLock(file) {
