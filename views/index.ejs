@@ -45,15 +45,29 @@
       .footer-content { grid-template-columns: 1fr; gap: 1.5rem; }
       main { padding: 3rem 0 2rem; }
     }
-    main { padding: 6rem 0 4rem; min-height: calc(100vh - 140px); }
-    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 8rem; align-items: start; }
-    .hero-content h1 { font-size: 3.5rem; line-height: 1.05; font-weight: 800; letter-spacing: -2px; color: #fff; margin-bottom: 1.5rem; }
-    .hero-content p { font-size: 0.95rem; color: #888; margin-bottom: 2.5rem; line-height: 1.8; max-width: 380px; }
-    .features-list { list-style: none; border-top: 1px solid #1e1e1e; }
-    .features-list li { padding: 0.85rem 0; font-size: 0.88rem; color: #aaa; border-bottom: 1px solid #1e1e1e; display: flex; align-items: center; gap: 0.75rem; }
-    .features-list li::before { content: ""; display: inline-block; width: 4px; height: 4px; background: #ff8c00; border-radius: 50%; flex-shrink: 0; }
-    .upload-section { border: 1px solid #1e1e1e; padding: 2.5rem; }
-    .upload-section h2 { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #666; margin-bottom: 2rem; }
+    main { padding: 0 0 5rem; min-height: calc(100vh - 140px); }
+
+    /* ── Hero top ── */
+    .hero-top { padding: 5rem 0 4rem; border-bottom: 1px solid #141414; text-align: center; }
+    .hero-top h1 {
+      font-size: clamp(2.8rem, 6vw, 5.5rem); font-weight: 800; line-height: 0.95;
+      letter-spacing: -0.04em; color: #fff; margin-bottom: 1.5rem;
+    }
+    .hero-top h1 em { font-style: normal; color: #ff8c00; }
+    .hero-top p { font-size: 0.9rem; color: #888; max-width: 440px; margin: 0 auto; line-height: 1.8; }
+
+
+    /* ── Form grid ── */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; padding-top: 4rem; }
+    .hero-content h2 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
+    .hero-content > p { font-size: 0.82rem; color: #666; line-height: 1.8; margin-bottom: 2rem; }
+    .feature-rows { display: flex; flex-direction: column; }
+    .feature-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #141414; }
+    .feature-row:first-child { border-top: 1px solid #141414; }
+    .fr-dot { width: 4px; height: 4px; background: #ff8c00; flex-shrink: 0; }
+    .fr-text { font-size: 0.82rem; color: #888; }
+    .upload-section { border: 1px solid #1e1e1e; border-top: 2px solid #ff8c00; padding: 2.5rem; }
+    .upload-section h2 { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #555; margin-bottom: 2rem; }
     form { display: grid; gap: 1.25rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
     label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #666; }
@@ -84,8 +98,8 @@
     .status { font-size: 0.8rem; color: #ff8c00; font-weight: 500; }
     .status.error { color: #ff6b6b; }
     @media (max-width: 768px) {
-      .hero { grid-template-columns: 1fr; gap: 3rem; }
-      .hero-content h1 { font-size: 2.25rem; letter-spacing: -1px; }
+
+      .hero { grid-template-columns: 1fr; gap: 3rem; padding-top: 3rem; }
       .hero-content p { max-width: 100%; }
       .upload-section { padding: 1.5rem; }
       input[type="file"], input[type="password"] { font-size: 16px; }
@@ -113,18 +127,26 @@
   </header>
 
   <main>
+    <!-- Hero headline -->
+    <div class="hero-top">
+      <div class="container">
+        <h1>The file link that<br><em>burns itself.</em></h1>
+        <p>Encrypted in your browser. Delivered once. Permanently deleted on access. No accounts, no logs, no trace.</p>
+      </div>
+    </div>
+
     <div class="container">
       <div class="hero">
         <div class="hero-content">
-          <h1>Share files.<br>Encrypted.<br>Ephemeral.</h1>
-          <p>Files are encrypted in your browser before upload. Links burn after one download. We never see your data.</p>
-          <ul class="features-list">
-            <li>Browser-side AES-256 encryption</li>
-            <li>One-time download links</li>
-            <li>Password protection available</li>
-            <li>No file stored permanently</li>
-            <li>Open source — <a href="https://github.com/Joy-Majumder/BurnLink" target="_blank" rel="noopener noreferrer" style="color:#ff8c00;text-decoration:none;">view on GitHub</a></li>
-          </ul>
+          <h2>Why BurnLink?</h2>
+          <p>Most file-sharing tools store your file indefinitely and log who accessed it. BurnLink is built on the opposite principle.</p>
+          <div class="feature-rows">
+            <div class="feature-row"><span class="fr-dot"></span><span class="fr-text">AES-256-GCM encryption — key never leaves your browser</span></div>
+            <div class="feature-row"><span class="fr-dot"></span><span class="fr-text">Link is cryptographically burned after first access</span></div>
+            <div class="feature-row"><span class="fr-dot"></span><span class="fr-text">View-once mode with 60-second in-browser timer</span></div>
+            <div class="feature-row"><span class="fr-dot"></span><span class="fr-text">Optional password — independent key derivation layer</span></div>
+            <div class="feature-row"><span class="fr-dot"></span><span class="fr-text">No account, no email, no IP logs &mdash; <a href="https://github.com/Joy-Majumder/BurnLink" target="_blank" rel="noopener noreferrer" style="color:#ff8c00;text-decoration:none;">open source</a></span></div>
+          </div>
         </div>
         <div class="upload-section">
           <h2>Upload a file</h2>

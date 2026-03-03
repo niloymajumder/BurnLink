@@ -41,7 +41,7 @@
     .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: #1e1e1e; border: 1px solid #1e1e1e; }
     .step { background: #0a0a0a; padding: 2rem 1.5rem; position: relative; }
     .step-num { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.2em; color: #333; text-transform: uppercase; margin-bottom: 1.25rem; }
-    .step-icon { font-size: 1.5rem; margin-bottom: 1rem; line-height: 1; }
+
     .step strong { display: block; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem; letter-spacing: 0.02em; }
     .step p { font-size: 0.82rem; color: #666; line-height: 1.7; }
     .step::after { content: ""; position: absolute; top: 50%; right: -1px; transform: translateY(-50%); width: 1px; height: 40%; background: #ff8c00; opacity: 0.35; }
@@ -151,25 +151,21 @@
       <div class="steps">
         <div class="step">
           <p class="step-num">Step 01</p>
-          <div class="step-icon">🔒</div>
           <strong>Encrypt in-browser</strong>
           <p>Your file is encrypted in your browser with AES-256-GCM before a single byte leaves your device.</p>
         </div>
         <div class="step">
           <p class="step-num">Step 02</p>
-          <div class="step-icon">☁️</div>
           <strong>Upload ciphertext only</strong>
           <p>Only the encrypted payload is uploaded. The decryption key never reaches our servers.</p>
         </div>
         <div class="step">
           <p class="step-num">Step 03</p>
-          <div class="step-icon">🔗</div>
           <strong>Share the link</strong>
           <p>You receive a one-time link. The decryption key travels only in the URL fragment — invisible to servers and logs.</p>
         </div>
         <div class="step">
           <p class="step-num">Step 04</p>
-          <div class="step-icon">💥</div>
           <strong>Auto-destruct</strong>
           <p>The encrypted file is permanently deleted the moment the recipient accesses it. The link is dead forever.</p>
         </div>
