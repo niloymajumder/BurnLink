@@ -9,7 +9,7 @@ const File = require("./models/File");
 const { dbRateLimit } = require("./models/RateLimit");
 const supabase = require("./lib/supabase");
 
-const { uploadToStorage, downloadFromStorage, removeFromStorage, getPresignedPutUrl, getFirstBytes } = require("./lib/r2");
+const { uploadToStorage, downloadFromStorage, streamFromStorage, removeFromStorage, getPresignedPutUrl, getFirstBytes } = require("./lib/r2");
 
 const app = express();
 app.disable("x-powered-by");
@@ -71,20 +71,36 @@ async function sendOneTimeEncryptedFile(res, file) {
   }
 
   // Only retrieve bytes AFTER the DB record is atomically claimed.
-  let storedBuffer;
+  // Stream directly from R2 → client to avoid buffering the whole file in
+  // memory, which caused timeouts and false "already downloaded" errors for
+  // large files.
+  let bodyStream, contentLength;
   try {
-    storedBuffer = await downloadFromStorage(file.path);
+    ({ stream: bodyStream, contentLength } = await streamFromStorage(file.path));
   } catch (storageError) {
     // DB record is already gone; clean up storage best-effort then re-throw.
     await removeFromStorage(file.path).catch(() => {});
     throw storageError;
   }
-  await removeFromStorage(file.path);
 
   res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
   res.setHeader("X-File-Name", encodeURIComponent(file.originalName));
   res.setHeader("Content-Type", "application/octet-stream");
-  return res.send(storedBuffer);
+  if (contentLength) {
+    res.setHeader("Content-Length", contentLength);
+  }
+
+  // Pipe stream and clean up R2 object when done (regardless of success/error).
+  // Guard prevents double-delete if both "finish" and "close" fire.
+  bodyStream.pipe(res);
+  let cleaned = false;
+  const cleanup = () => {
+    if (cleaned) return;
+    cleaned = true;
+    removeFromStorage(file.path).catch(() => {});
+  };
+  res.on("finish", cleanup);
+  res.on("close", cleanup);  // client disconnected early
 }
 
 function getActiveLock(file) {
