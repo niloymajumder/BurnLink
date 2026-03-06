@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta id="__bl_rt__" data-rto="<%= ((returnTo || '').startsWith('/') && !(returnTo || '').startsWith('//')) ? returnTo : '/' %>">
   <link rel="icon" type="image/png" href="/logo1.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0a0a0a" />
@@ -77,10 +78,12 @@
   </p>
 
   <script nonce="<%= cspNonce %>">
-    // Fix 8: Use JSON.stringify for the full JS literal (no manual slice) and
-    // replace < / > with unicode escapes so </script> cannot break out of this
-    // script tag — a genuine XSS vector when returnTo contains user input.
-    var RETURN_TO = <%- JSON.stringify(returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/').replace(/</g, '\\u003c').replace(/>/g, '\\u003e') %>;
+    // Read returnTo from a data attribute — never inject user input into script context.
+    var _rtEl = document.getElementById('__bl_rt__');
+    var RETURN_TO = (_rtEl && _rtEl.getAttribute('data-rto')) || '/';
+    if (_rtEl) { _rtEl.parentNode.removeChild(_rtEl); }
+    // Defense-in-depth: re-validate the value in JS
+    if (!RETURN_TO.startsWith('/') || RETURN_TO.startsWith('//')) { RETURN_TO = '/'; }
 
     function setStatus(msg, isError) {
       var el = document.getElementById("status");
