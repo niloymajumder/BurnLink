@@ -199,15 +199,13 @@
         return;
       }
 
+
       var file = fileInput.files[0];
       var MAX_UPLOAD_BYTES = 1 * 1024 * 1024 * 1024; // 1 GB
       if (file.size > MAX_UPLOAD_BYTES) {
         setError("File too large. Maximum upload size is 1 GB.");
         return;
       }
-      var fileData = await file.arrayBuffer();
-      var fileDataBytes = new Uint8Array(fileData);
-      var userPassword = passwordInput.value.trim();
 
       // Get selected mode
       var modeRadios = document.getElementsByName("mode");
@@ -218,6 +216,22 @@
           break;
         }
       }
+
+      // Restrict zip files in view-once mode
+      if (selectedMode === "view-once" && file.name.toLowerCase().endsWith(".zip")) {
+        setError("Zip files are not supported in view-once mode.");
+        return;
+      }
+
+      // Restrict PDFs in download mode
+      if (selectedMode === "download" && file.name.toLowerCase().endsWith(".pdf")) {
+        setError("PDF files cannot be downloaded. Please use view-once mode for PDFs.");
+        return;
+      }
+
+      var fileData = await file.arrayBuffer();
+      var fileDataBytes = new Uint8Array(fileData);
+      var userPassword = passwordInput.value.trim();
 
       var encryptedPayload;
       var linkKey = null;
