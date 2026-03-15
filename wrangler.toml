@@ -1,0 +1,5 @@
+name = "burnlink"
+type = "javascript"
+main = "functions/app.js"
+compatibility_date = "2026-03-16"
+
