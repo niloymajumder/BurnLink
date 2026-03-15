@@ -198,6 +198,28 @@ function isLocalHost(hostname) {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 }
 
+function getShareBaseUrl(req) {
+  const isNetlify = process.env.NETLIFY === "true";
+  const canonicalHostname = canonicalUrl?.hostname?.toLowerCase();
+  const canonicalIsLocal = canonicalHostname ? isLocalHost(canonicalHostname) : false;
+
+  if (canonicalUrl && (!isNetlify || !canonicalIsLocal)) {
+    return canonicalUrl.origin;
+  }
+
+  const forwardedProto = (req.headers["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
+  const forwardedHost = (req.headers["x-forwarded-host"] || "").split(",")[0].trim();
+  const requestHost = forwardedHost || req.get("host") || "";
+  const requestHostname = requestHost.split(":")[0].toLowerCase();
+  const protocol = forwardedProto || req.protocol || "https";
+
+  if (requestHostname && !isLocalHost(requestHostname)) {
+    return `${protocol}://${requestHost}`;
+  }
+
+  return "https://burnlink.page";
+}
+
 // ── Bot scanner fast-reject ────────────────────────────────────────────────
 // Drop known exploit/WordPress/scanner probes before any other logic runs.
 const BOT_SCAN_EXACT = new Set([
@@ -525,9 +547,7 @@ app.post("/api/commit", dbRateLimit(30, 10 * 60 * 1000), async (req, res) => {
       linkKey: rawLinkKey || null,
     });
 
-    const shareBaseUrl = canonicalUrl
-      ? canonicalUrl.origin
-      : `${req.protocol}://${req.get("host")}`;
+    const shareBaseUrl = getShareBaseUrl(req);
 
     return res.status(201).json({ id: file.id, baseUrl: shareBaseUrl });
   } catch (err) {
@@ -605,9 +625,7 @@ app.post("/api/upload", dbRateLimit(10, 10 * 60 * 1000), upload.single("file"), 
       mode,
     });
 
-    const shareBaseUrl = canonicalUrl
-      ? canonicalUrl.origin
-      : `${req.protocol}://${req.get("host")}`;
+    const shareBaseUrl = getShareBaseUrl(req);
 
     return res.status(201).json({
       id: file.id,
