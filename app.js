@@ -480,14 +480,7 @@ app.get("/api/presign", dbRateLimit(30, 10 * 60 * 1000), async (req, res) => {
 // Step 2 — browser calls this after it finishes the direct PUT to R2
 // Fix 4: Use DB-backed rate limiter so limits survive serverless cold starts
 app.post("/api/commit", dbRateLimit(30, 10 * 60 * 1000), async (req, res) => {
-  const { storagePath, originalName, mode: rawMode, password: rawPassword, linkKey: rawLinkKey, "cf-turnstile-response": turnstileToken } = req.body;
-
-  const fwdRaw = (req.headers["x-forwarded-for"] || "").trim();
-  const userIp = fwdRaw.split(",")[0].trim() || req.socket?.remoteAddress;
-  const turnstileOk = await verifyTurnstile(turnstileToken, userIp);
-  if (!turnstileOk) {
-    return res.status(403).json({ error: "Bot verification failed. Please try again." });
-  }
+  const { storagePath, originalName, mode: rawMode, password: rawPassword, linkKey: rawLinkKey } = req.body;
 
   if (!storagePath || !STORAGE_PATH_RE.test(storagePath)) {
     return res.status(400).json({ error: "Invalid storage path." });
