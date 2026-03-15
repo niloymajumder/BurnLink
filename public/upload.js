@@ -231,15 +231,9 @@
         }
       }
 
-      // Restrict zip files in view-once mode
-      if (selectedMode === "view-once" && file.name.toLowerCase().endsWith(".zip")) {
-        setError("Zip files are not supported in view-once mode.");
-        return;
-      }
-
-      // Restrict PDFs in download mode
-      if (selectedMode === "download" && file.name.toLowerCase().endsWith(".pdf")) {
-        setError("PDF files cannot be downloaded. Please use view-once mode for PDFs.");
+      // Restrict zip files in both modes
+      if (file.name.toLowerCase().endsWith(".zip")) {
+        setError("Zip files are not supported.");
         return;
       }
 
