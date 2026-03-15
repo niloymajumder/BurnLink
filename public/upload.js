@@ -5,6 +5,7 @@
   var form = document.getElementById("upload-form");
   var fileInput = document.getElementById("file");
   var passwordInput = document.getElementById("password");
+  var passwordToggleBtn = document.getElementById("password-toggle");
   var uploadBtn = document.getElementById("upload-btn");
   var statusEl = document.getElementById("upload-status");
   var linkBoxEl = document.getElementById("link-box");
@@ -19,6 +20,19 @@
   function setError(message) {
     statusEl.textContent = message || "";
     statusEl.classList.add("error");
+  }
+
+  function hasWhitespace(value) {
+    return /\s/.test(value || "");
+  }
+
+  function togglePasswordVisibility() {
+    if (!passwordInput || !passwordToggleBtn) return;
+    var showing = passwordInput.type === "text";
+    passwordInput.type = showing ? "password" : "text";
+    passwordToggleBtn.textContent = showing ? "Show" : "Hide";
+    passwordToggleBtn.setAttribute("aria-pressed", showing ? "false" : "true");
+    passwordToggleBtn.setAttribute("aria-label", showing ? "Show password" : "Hide password");
   }
 
   function showLinkBox(fileId, baseUrl, hasPassword) {
@@ -231,7 +245,12 @@
 
       var fileData = await file.arrayBuffer();
       var fileDataBytes = new Uint8Array(fileData);
-      var userPassword = passwordInput.value.trim();
+      var userPassword = passwordInput.value;
+
+      if (hasWhitespace(userPassword)) {
+        setError("Passwords cannot contain spaces.");
+        return;
+      }
 
       var encryptedPayload;
       var linkKey = null;
@@ -330,4 +349,7 @@
 
   form.addEventListener("submit", handleSubmit);
   copyLinkBtn.addEventListener("click", handleCopyLink);
+  if (passwordToggleBtn) {
+    passwordToggleBtn.addEventListener("click", togglePasswordVisibility);
+  }
 })();

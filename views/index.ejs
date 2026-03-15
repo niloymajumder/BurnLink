@@ -72,7 +72,7 @@
     form { display: grid; gap: 1.25rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
     label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #666; }
-    input[type="file"], input[type="password"] {
+    input[type="file"], input[type="password"], input[type="text"] {
       font-size: 0.9rem; padding: 0.85rem 1rem; border: 1px solid #222; background: #111;
       color: #fff; font-family: inherit; transition: border-color 0.2s; min-height: 44px;
       -webkit-appearance: none; appearance: none; border-radius: 0; width: 100%;
@@ -81,8 +81,32 @@
       cursor: pointer; padding: 0.35rem 0.8rem; background: #1a1a1a; border: 1px solid #2a2a2a;
       border-radius: 0; color: #bbb; font-size: 0.78rem; font-weight: 500; margin-right: 0.75rem;
     }
-    input[type="password"]::placeholder { color: #444; }
-    input[type="file"]:focus, input[type="password"]:focus { outline: none; border-color: #eb583d; }
+    input[type="password"]::placeholder, input[type="text"]::placeholder { color: #444; }
+    input[type="file"]:focus, input[type="password"]:focus, input[type="text"]:focus { outline: none; border-color: #eb583d; }
+    input[type="password"]::-ms-reveal,
+    input[type="password"]::-ms-clear,
+    input[type="text"]::-ms-reveal,
+    input[type="text"]::-ms-clear {
+      display: none;
+    }
+    input[type="password"]::-webkit-credentials-auto-fill-button,
+    input[type="password"]::-webkit-textfield-decoration-container,
+    input[type="text"]::-webkit-credentials-auto-fill-button,
+    input[type="text"]::-webkit-textfield-decoration-container {
+      visibility: hidden;
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+    }
+    .password-input-wrap { position: relative; }
+    .password-input-wrap input { padding-right: 5.25rem; }
+    .password-toggle {
+      position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%);
+      width: auto; min-height: 32px; padding: 0.35rem 0.65rem;
+      background: #1a1a1a; color: #bbb; border: 1px solid #2a2a2a;
+      font-size: 0.62rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .password-toggle:hover:not(:disabled) { opacity: 1; color: #fff; border-color: #3a3a3a; }
     button {
       background: #eb583d; color: #000; border: none; padding: 0.9rem 1.5rem;
       font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
@@ -164,7 +188,10 @@
             </div>
             <div class="form-group">
               <label for="password">Password (optional)</label>
-              <input type="password" id="password" name="password" placeholder="Leave empty for link-only access" />
+              <div class="password-input-wrap">
+                <input type="password" id="password" name="password" placeholder="Leave empty for link-only access" pattern="\S*" title="Passwords cannot contain spaces." />
+                <button id="password-toggle" class="password-toggle" type="button" aria-label="Show password" aria-pressed="false">Show</button>
+              </div>
             </div>
             <div class="form-group">
               <label>Share mode</label>

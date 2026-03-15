@@ -61,6 +61,10 @@ function makeCleanupToken(storagePath) {
   return crypto.createHmac("sha256", CLEANUP_SECRET).update(storagePath).digest("hex");
 }
 
+function passwordHasWhitespace(password) {
+  return typeof password === "string" && /\s/.test(password);
+}
+
 // ── Fix 6: Preview/link-preview bot detection ─────────────────────────────
 // Known bots that auto-fetch shared URLs (link previews). Receiving one of
 // these must NOT trigger a burn — return a neutral preview page instead.
@@ -511,6 +515,10 @@ app.post("/api/commit", dbRateLimit(30, 10 * 60 * 1000), async (req, res) => {
     return res.status(400).json({ error: "Invalid link key." });
   }
 
+  if (passwordHasWhitespace(rawPassword)) {
+    return res.status(400).json({ error: "Passwords cannot contain spaces." });
+  }
+
   const originalNameClean = (originalName || "file").toString().trim().slice(0, 255);
   const mode = (rawMode === "view-once" || rawMode === "download") ? rawMode : "download";
 
@@ -537,7 +545,7 @@ app.post("/api/commit", dbRateLimit(30, 10 * 60 * 1000), async (req, res) => {
     const file = await File.createFile({
       path: storagePath,
       originalName: originalNameClean,
-      password: rawPassword?.trim() || undefined,
+      password: rawPassword || undefined,
       mode,
       linkKey: rawLinkKey || null,
     });
@@ -591,7 +599,10 @@ app.post("/api/upload", dbRateLimit(10, 10 * 60 * 1000), upload.single("file"), 
     }
 
     const originalName = (req.body.originalName?.trim() || req.file.originalname || "file").slice(0, 255);
-    const rawPassword = req.body.password?.trim() || "";
+    const rawPassword = (req.body.password || "").toString();
+    if (passwordHasWhitespace(rawPassword)) {
+      return res.status(400).json({ error: "Passwords cannot contain spaces." });
+    }
     // Whitelist mode — reject anything not in the allowed set
     const rawMode = req.body.mode?.trim() || "";
     const mode = (rawMode === "view-once" || rawMode === "download") ? rawMode : "download";
