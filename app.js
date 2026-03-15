@@ -293,10 +293,10 @@ app.use((req, res, next) => {
   res.setHeader("Content-Security-Policy", [
     "default-src 'none'",
     `script-src 'self' 'nonce-${nonce}' https://cloud.umami.is https://challenges.cloudflare.com https://static.cloudflareinsights.com`,
-    "style-src 'unsafe-inline'",
+    "style-src 'unsafe-inline' https://fonts.googleapis.com",
     "img-src 'self' blob: data: https://api.producthunt.com",
     "media-src 'self' blob:",
-    "font-src 'self'",
+    "font-src 'self' https://fonts.gstatic.com",
     `connect-src 'self' https://cloud.umami.is https://challenges.cloudflare.com${r2CspOrigin ? " " + r2CspOrigin : ""}`,
     "frame-src blob: https://challenges.cloudflare.com",
     "form-action 'self'",
