@@ -377,7 +377,7 @@
       }
       .footer-content {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         gap: 2rem;
         margin-bottom: 2rem;
       }
@@ -726,107 +726,6 @@
       </div>
     </main>
 
-    <footer>
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-section">
-            <h3>Product</h3>
-            <a href="/">Share files</a>
-            <a href="/about">How it works</a>
-            <a href="/security-policy">Security policy</a>
-          </div>
-          <div class="footer-section">
-            <h3>Security</h3>
-            <a href="/security-policy">Security policy</a>
-            <a href="/hall-of-fame">Hall of fame</a>
-          </div>
-          <div class="footer-section">
-            <h3>Developer</h3>
-            <a
-              href="https://github.com/Joy-Majumder"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Joy G. Majumdar</a
-            >
-            <a
-              href="https://github.com/niloymajumder"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Niloy Majumder</a
-            >
-            <a
-              href="https://github.com/Joy-Majumder/BurnLink"
-              target="_blank"
-              rel="noopener noreferrer"
-              >GitHub</a
-            >
-          </div>
-          <div class="footer-section">
-            <h3>Paperfrogs HQ</h3>
-            <p
-              style="
-                font-size: 0.8rem;
-                color: #555;
-                line-height: 1.7;
-                margin-bottom: 0.75rem;
-              "
-            >
-              An infrastructure-first studio building research-driven,
-              production-ready tools. BurnLink is a Paperfrogs product.
-            </p>
-            <a
-              href="https://paperfrogs.dev"
-              target="_blank"
-              rel="noopener noreferrer"
-              >paperfrogs.dev</a
-            >
-            <a
-              href="https://github.com/paperfrogs-hq"
-              target="_blank"
-              rel="noopener noreferrer"
-              >GitHub</a
-            >
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              flex-wrap: wrap;
-              gap: 0.75rem;
-            "
-          >
-            <p>
-              &copy; 2026 BurnLink &mdash; A product of
-              <a
-                href="https://paperfrogs.dev"
-                target="_blank"
-                rel="noopener noreferrer"
-                style="
-                  color: #555;
-                  text-decoration: none;
-                  transition: color 0.2s;
-                "
-                onmouseover="this.style.color = '#fff'"
-                onmouseout="this.style.color = '#555'"
-                >Paperfrogs/Open</a
-              >
-            </p>
-            <a
-              href="https://www.producthunt.com/products/burnlink?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-burnlink-2"
-              target="_blank"
-              rel="noopener noreferrer"
-              ><img
-                alt="BurnLink - Share files. Encrypted. Ephemeral. | Product Hunt"
-                width="250"
-                height="54"
-                src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1090837&amp;theme=dark&amp;t=1772737860949"
-            /></a>
-          </div>
-        </div>
-      </div>
-    </footer>
+    <%- include("partials/footer", { showProductHuntBadge: true, showOpenSourceLink: false }) %>
   </body>
 </html>

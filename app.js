@@ -8,6 +8,7 @@ const multer = require("multer");
 const File = require("./models/File");
 const { dbRateLimit } = require("./models/RateLimit");
 const supabase = require("./lib/supabase");
+const { getComparisonBySlug, getComparisonPages } = require("./lib/comparisons");
 
 const { uploadToStorage, downloadFromStorage, streamFromStorage, removeFromStorage, getPresignedPutUrl, getPresignedGetUrl, getFirstBytes } = require("./lib/r2");
 
@@ -204,6 +205,25 @@ function getShareBaseUrl(req) {
   const canonicalIsLocal = canonicalHostname ? isLocalHost(canonicalHostname) : false;
 
   if (canonicalUrl && (!isNetlify || !canonicalIsLocal)) {
+    return canonicalUrl.origin;
+  }
+
+  const forwardedProto = (req.headers["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
+  const forwardedHost = (req.headers["x-forwarded-host"] || "").split(",")[0].trim();
+  const requestHost = forwardedHost || req.get("host") || "";
+  const requestHostname = requestHost.split(":")[0].toLowerCase();
+  const protocol = forwardedProto || req.protocol || "https";
+
+  if (requestHostname && !isLocalHost(requestHostname)) {
+    return `${protocol}://${requestHost}`;
+  }
+
+  return "https://burnlink.page";
+}
+
+function getPublicSiteUrl(req) {
+  const canonicalHostname = canonicalUrl?.hostname?.toLowerCase();
+  if (canonicalUrl && canonicalHostname && !isLocalHost(canonicalHostname)) {
     return canonicalUrl.origin;
   }
 
@@ -438,6 +458,30 @@ app.get("/security-policy", (req, res) => {
 
 app.get("/hall-of-fame", (req, res) => {
   res.render("hall-of-fame");
+});
+
+app.get("/comparisons/:slug", (req, res) => {
+  const comparison = getComparisonBySlug(req.params.slug);
+  if (!comparison) {
+    return res.status(404).render("not-found");
+  }
+
+  const comparisonPages = getComparisonPages();
+  const footerComparisonLinks = comparisonPages.map((page) => ({
+    href: `/comparisons/${page.slug}`,
+    label: `BurnLink vs ${page.competitor}`,
+  }));
+  const relatedComparisons = comparisonPages.filter(
+    (page) => page.slug !== comparison.slug
+  );
+  const publicBaseUrl = getPublicSiteUrl(req);
+
+  return res.render("comparison", {
+    comparison,
+    canonicalUrl: `${publicBaseUrl}/comparisons/${comparison.slug}`,
+    relatedComparisons,
+    footerComparisonLinks,
+  });
 });
 
 // ── Responsible disclosure policy ─────────────────────────────────────────

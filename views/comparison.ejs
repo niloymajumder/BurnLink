@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo1.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="<%= comparison.metaDescription %>" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta property="og:title" content="<%= comparison.pageTitle %>" />
+    <meta property="og:description" content="<%= comparison.metaDescription %>" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= canonicalUrl %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="<%= comparison.pageTitle %>" />
+    <meta name="twitter:description" content="<%= comparison.metaDescription %>" />
+    <link rel="canonical" href="<%= canonicalUrl %>" />
+    <title><%= comparison.pageTitle %></title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(235, 88, 61, 0.12), transparent 35%),
+          #0a0a0a;
+        color: #fff; line-height: 1.6; overflow-x: hidden; min-height: 100vh;
+      }
+      .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+      header {
+        padding: 1.75rem 0; border-bottom: 1px solid #1e1e1e;
+        position: sticky; top: 0; background: rgba(10, 10, 10, 0.94);
+        backdrop-filter: blur(12px); z-index: 100;
+      }
+      .header-content { display: flex; justify-content: space-between; align-items: center; }
+      .logo { text-decoration: none; display: flex; align-items: center; }
+      .logo img { height: 45px; width: auto; display: block; }
+      nav { display: flex; gap: 2.5rem; }
+      nav a { text-decoration: none; color: #666; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+      nav a:hover, nav a.active { color: #fff; }
+      main { padding-bottom: 4rem; }
+      section { border-bottom: 1px solid #1e1e1e; }
+      .hero { padding: 6.5rem 0 5rem; }
+      .hero-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr); gap: 2rem; align-items: start; }
+      .eyebrow, .section-label {
+        display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.18em;
+        text-transform: uppercase; color: #eb583d; margin-bottom: 1.4rem;
+      }
+      .hero h1 {
+        font-size: clamp(3rem, 6vw, 5rem); line-height: 0.95; font-weight: 800;
+        letter-spacing: -0.05em; max-width: 760px; margin-bottom: 1.5rem;
+      }
+      .hero h1 span { color: #eb583d; }
+      .hero-sub { max-width: 620px; color: #8f8f8f; font-size: 1rem; line-height: 1.9; margin-bottom: 2rem; }
+      .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem; }
+      .btn {
+        display: inline-block; padding: 0.9rem 1.65rem; font-size: 0.74rem; font-weight: 700;
+        letter-spacing: 0.11em; text-transform: uppercase; text-decoration: none;
+        border-radius: 0; transition: opacity 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      }
+      .btn:hover { opacity: 0.85; }
+      .btn-primary { background: #eb583d; color: #000; }
+      .btn-ghost { border: 1px solid #2d2d2d; color: #d0d0d0; }
+      .hero-note, .comparison-summary { border: 1px solid #1e1e1e; background: linear-gradient(180deg, rgba(17, 17, 17, 0.85), rgba(10, 10, 10, 0.95)); }
+      .hero-note { padding: 1.6rem; }
+      .hero-note strong, .summary-block strong {
+        display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
+        text-transform: uppercase; color: #555; margin-bottom: 1rem;
+      }
+      .hero-note p { color: #9a9a9a; font-size: 0.92rem; line-height: 1.85; }
+      .hero-stats { margin-top: 1.5rem; display: grid; gap: 1px; background: #1e1e1e; border: 1px solid #1e1e1e; }
+      .hero-stat { background: #0a0a0a; padding: 1rem 1.1rem; }
+      .hero-stat strong { display: block; font-size: 1.25rem; margin-bottom: 0.2rem; }
+      .hero-stat span { color: #727272; font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; }
+      .section-shell { padding: 4.75rem 0; }
+      .section-title { font-size: clamp(2rem, 3vw, 3rem); line-height: 1.05; letter-spacing: -0.04em; margin-bottom: 1rem; max-width: 760px; }
+      .section-copy { max-width: 720px; color: #808080; line-height: 1.9; margin-bottom: 2.5rem; }
+      .problem-grid, .advantage-grid, .related-grid { display: grid; gap: 1px; background: #1e1e1e; border: 1px solid #1e1e1e; }
+      .problem-grid, .advantage-grid, .related-grid { grid-template-columns: repeat(3, 1fr); }
+      .panel-card, .advantage-card, .related-card { background: #0a0a0a; padding: 1.8rem; min-height: 100%; }
+      .panel-card strong, .advantage-card strong, .related-card strong { display: block; font-size: 0.96rem; line-height: 1.4; margin-bottom: 0.8rem; }
+      .panel-card p, .advantage-card p, .related-card p, .summary-block p, .summary-block li, .faq-item p { color: #787878; font-size: 0.92rem; line-height: 1.8; }
+      .advantage-card .card-index, .related-card span {
+        display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.16em;
+        text-transform: uppercase; color: #eb583d; margin-bottom: 0.9rem;
+      }
+      .comparison-summary { padding: 2rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      .summary-block ul { list-style: none; }
+      .summary-block li + li { margin-top: 0.55rem; }
+      .summary-block li::before {
+        content: ""; width: 5px; height: 5px; background: #eb583d; display: inline-block;
+        margin-right: 0.7rem; transform: translateY(-2px);
+      }
+      .faq-list { border: 1px solid #1e1e1e; background: #0a0a0a; }
+      .faq-item + .faq-item { border-top: 1px solid #1e1e1e; }
+      .faq-item { padding: 1.5rem 1.75rem; }
+      .faq-item strong { display: block; font-size: 0.95rem; margin-bottom: 0.65rem; }
+      .related-card { text-decoration: none; transition: transform 0.2s ease; }
+      .related-card:hover { transform: translateY(-2px); }
+      footer { border-top: 1px solid #1e1e1e; padding: 3rem 0; }
+      .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+      .footer-section h3 { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 1rem; color: #555; }
+      .footer-section a { display: block; color: #777; text-decoration: none; font-size: 0.85rem; margin-bottom: 0.5rem; transition: color 0.2s; }
+      .footer-section a:hover { color: #fff; }
+      .footer-bottom { border-top: 1px solid #1e1e1e; padding-top: 1.5rem; color: #444; font-size: 0.78rem; }
+      @media (max-width: 900px) {
+        .hero-grid, .problem-grid, .advantage-grid, .comparison-summary, .related-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 768px) {
+        nav { gap: 1.5rem; }
+        .header-content { flex-wrap: wrap; gap: 1rem; }
+        .hero { padding: 4rem 0 3rem; }
+        .section-shell { padding: 3.5rem 0; }
+        .footer-content { grid-template-columns: 1fr; gap: 1.5rem; }
+      }
+      @media (max-width: 480px) {
+        .container { padding: 0 1rem; }
+        .logo img { height: 38px; }
+        .hero h1 { font-size: 2.4rem; }
+        .hero-actions { flex-direction: column; align-items: stretch; }
+        .btn { text-align: center; }
+      }
+    </style>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "733fae826e624a4badabf309aea4d629"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+    <!-- Umami Analytics -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="e4df83ef-9f58-4f9b-9d4b-cee378637ed7"></script>
+    <!-- End Umami Analytics -->
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <a href="/" class="logo"><img src="/logo1.png" alt="BurnLink" /></a>
+          <nav><a href="/">Home</a><a href="/about">About</a></nav>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="hero-grid">
+            <div>
+              <div class="eyebrow">BurnLink Comparisons</div>
+              <h1>BurnLink vs <span><%= comparison.competitor %></span></h1>
+              <p class="hero-sub"><%= comparison.heroSubtitle %></p>
+              <div class="hero-actions">
+                <a href="/" class="btn btn-primary">Share a file</a>
+                <a href="/about" class="btn btn-ghost">How BurnLink works</a>
+              </div>
+            </div>
+            <div>
+              <div class="hero-note">
+                <strong>Quick take</strong>
+                <p><%= comparison.focusNote %></p>
+              </div>
+              <div class="hero-stats">
+                <div class="hero-stat"><strong>Browser-side</strong><span>Encryption before upload</span></div>
+                <div class="hero-stat"><strong>One-time</strong><span>Access link delivery</span></div>
+                <div class="hero-stat"><strong>No account</strong><span>Send without signup</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="container section-shell">
+          <div class="section-label">Why BurnLink</div>
+          <h2 class="section-title"><%= comparison.problemTitle %></h2>
+          <p class="section-copy"><%= comparison.problemIntro %></p>
+          <div class="problem-grid">
+            <% comparison.problemPoints.forEach(function (point) { %>
+              <div class="panel-card">
+                <strong><%= point.title %></strong>
+                <p><%= point.text %></p>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="container section-shell">
+          <div class="section-label">Comparison</div>
+          <h2 class="section-title"><%= comparison.advantagesTitle %></h2>
+          <p class="section-copy"><%= comparison.advantagesIntro %></p>
+          <div class="advantage-grid">
+            <% comparison.advantages.forEach(function (advantage, index) { %>
+              <div class="advantage-card">
+                <span class="card-index"><%= String(index + 1).padStart(2, "0") %></span>
+                <strong><%= advantage.title %></strong>
+                <p><%= advantage.text %></p>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="container section-shell">
+          <div class="comparison-summary">
+            <div class="summary-block">
+              <strong>Choose BurnLink when</strong>
+              <ul>
+                <li>You need browser-side encrypted sharing.</li>
+                <li>You want the link to burn after successful access.</li>
+                <li>You need optional password protection for the file.</li>
+                <li>You want a no-account path for fast external delivery.</li>
+              </ul>
+            </div>
+            <div class="summary-block">
+              <strong>Important tradeoff</strong>
+              <p>BurnLink is intentionally focused on privacy-first, one-time delivery. It is not positioned as a broad cloud workspace or a long-term file hosting platform.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="container section-shell">
+          <div class="section-label">FAQ</div>
+          <h2 class="section-title">Common questions about BurnLink vs <%= comparison.competitor %></h2>
+          <div class="faq-list">
+            <% comparison.faq.forEach(function (item) { %>
+              <div class="faq-item">
+                <strong><%= item.question %></strong>
+                <p><%= item.answer %></p>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="container section-shell">
+          <div class="section-label">Compare</div>
+          <h2 class="section-title">Explore other BurnLink alternatives</h2>
+          <div class="related-grid">
+            <% relatedComparisons.forEach(function (item) { %>
+              <a href="/comparisons/<%= item.slug %>" class="related-card">
+                <span>Alternative</span>
+                <strong>BurnLink vs <%= item.competitor %></strong>
+                <p><%= item.focusNote %></p>
+              </a>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+    </main>
+    <%- include("partials/footer", { showOpenSourceLink: true, comparisonLinks: footerComparisonLinks }) %>
+  </body>
+</html>
