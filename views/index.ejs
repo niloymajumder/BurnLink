@@ -99,13 +99,13 @@
       letter-spacing: -0.04em; color: #fff; margin-bottom: 1.5rem;
     }
     .hero-top h1 em { font-style: normal; color: #eb583d; }
-    .hero-top p { font-size: 0.9rem; color: #888; max-width: 440px; margin: 0 auto; line-height: 1.8; }
+    .hero-top p { font-size: 0.9rem; color: #888; max-width: 440px; margin: 0 auto; line-height: 1.55; }
 
 
     /* ── Form grid ── */
     .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; padding-top: 4rem; }
     .hero-content h2 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 0.6rem; letter-spacing: -0.01em; }
-    .hero-content > p { font-size: 0.82rem; color: #666; line-height: 1.8; margin-bottom: 2rem; }
+    .hero-content > p { font-size: 0.82rem; color: #666; line-height: 1.55; margin-bottom: 2rem; }
     .feature-rows { display: flex; flex-direction: column; }
     .feature-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #141414; }
     .feature-row:first-child { border-top: 1px solid #141414; }
@@ -199,14 +199,7 @@
 </script>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <a href="/" class="logo"><img src="/logo1.png" alt="BurnLink" /></a>
-        <nav><a href="/" class="active">Home</a><a href="/about">About</a></nav>
-      </div>
-    </div>
-  </header>
+  <%- include("partials/header", { activePage: "home" }) %>
 
   <main>
     <!-- Hero headline -->
