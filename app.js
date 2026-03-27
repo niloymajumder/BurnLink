@@ -9,6 +9,12 @@ const File = require("./models/File");
 const { dbRateLimit } = require("./models/RateLimit");
 const supabase = require("./lib/supabase");
 const { getComparisonBySlug, getComparisonPages } = require("./lib/comparisons");
+const {
+  versioningPolicy,
+  currentRelease,
+  changelogEntries,
+  roadmapColumns,
+} = require("./lib/product-updates");
 
 const { uploadToStorage, downloadFromStorage, streamFromStorage, removeFromStorage, getPresignedPutUrl, getPresignedGetUrl, getFirstBytes } = require("./lib/r2");
 
@@ -458,6 +464,26 @@ app.get("/security-policy", (req, res) => {
 
 app.get("/hall-of-fame", (req, res) => {
   res.render("hall-of-fame");
+});
+
+app.get("/changelog", (req, res) => {
+  const publicBaseUrl = getPublicSiteUrl(req);
+  res.render("changelog", {
+    canonicalUrl: `${publicBaseUrl}/changelog`,
+    versioningPolicy,
+    currentRelease,
+    changelogEntries,
+  });
+});
+
+app.get("/roadmap", (req, res) => {
+  const publicBaseUrl = getPublicSiteUrl(req);
+  res.render("roadmap", {
+    canonicalUrl: `${publicBaseUrl}/roadmap`,
+    versioningPolicy,
+    currentRelease,
+    roadmapColumns,
+  });
 });
 
 app.get("/comparisons/:slug", (req, res) => {

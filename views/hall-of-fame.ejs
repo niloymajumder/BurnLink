@@ -110,7 +110,7 @@
       .intro {
         font-size: 0.95rem;
         color: #888;
-        line-height: 1.8;
+        line-height: 1.55;
         margin-bottom: 3rem;
         padding-bottom: 3rem;
         border-bottom: 1px solid #1e1e1e;
@@ -172,7 +172,7 @@
       .hof-empty p {
         font-size: 0.88rem;
         color: #444;
-        line-height: 1.8;
+        line-height: 1.55;
       }
       .hof-empty a {
         color: #eb583d;
@@ -335,7 +335,7 @@
         padding: 1rem 1.25rem;
         font-size: 0.84rem;
         color: #aaa;
-        line-height: 1.75;
+        line-height: 1.55;
         margin-top: 2rem;
       }
       .notice strong {
@@ -483,17 +483,7 @@
     <!-- End Umami Analytics -->
   </head>
   <body>
-    <header>
-      <div class="container">
-        <div class="header-content">
-          <a href="/" class="logo"><img src="/logo1.png" alt="BurnLink" /></a>
-          <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <%- include("partials/header", { activePage: "" }) %>
 
     <main>
       <div class="container">
@@ -551,7 +541,7 @@
               font-size: 0.875rem;
               color: #666;
               margin-bottom: 1.25rem;
-              line-height: 1.8;
+              line-height: 1.55;
             "
           >
             All reported findings and their resolution status. This log is

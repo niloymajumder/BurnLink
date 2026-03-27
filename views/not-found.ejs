@@ -137,7 +137,7 @@
       p {
         font-size: 0.9rem;
         color: #888;
-        line-height: 1.8;
+        line-height: 1.55;
         margin-bottom: 2.5rem;
       }
       .btn-row {
@@ -221,14 +221,7 @@
     <!-- End Umami Analytics -->
   </head>
   <body>
-    <header>
-      <div class="container">
-        <div class="header-content">
-          <a href="/" class="logo"><img src="/logo1.png" alt="BurnLink" /></a>
-          <nav><a href="/">Home</a><a href="/about">About</a></nav>
-        </div>
-      </div>
-    </header>
+    <%- include("partials/header", { activePage: "" }) %>
 
     <main>
       <div class="container">

@@ -57,6 +57,8 @@ test("core pages render without crashing", async () => {
   const pages = [
     ["/", "BurnLink — Share files. Encrypted. Ephemeral."],
     ["/about", "About - BurnLink"],
+    ["/changelog", "Changelog - BurnLink"],
+    ["/roadmap", "Roadmap - BurnLink"],
     ["/security-policy", "Security Policy - BurnLink"],
     ["/hall-of-fame", "Hall of Fame — BurnLink"],
   ];
@@ -67,6 +69,39 @@ test("core pages render without crashing", async () => {
     assert.match(response.body, new RegExp(`<title>${title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}<\\/title>`));
     assert.match(response.body, /BurnLink vs WeTransfer/);
   }
+});
+
+test("public pages share the same header navigation", async () => {
+  const pages = ["/", "/about", "/changelog", "/roadmap", "/comparisons/wetransfer"];
+
+  for (const path of pages) {
+    const response = await request(path);
+    assert.equal(response.status, 200, `${path} should return 200`);
+    assert.match(response.body, /href="\/"(?: class="active")?>Home<\/a>/);
+    assert.match(response.body, /href="\/about"/);
+    assert.match(response.body, /href="\/changelog"/);
+    assert.match(response.body, /href="\/roadmap"/);
+  }
+});
+
+test("changelog and roadmap expose versioning and planned work", async () => {
+  const changelog = await request("/changelog");
+  const roadmap = await request("/roadmap");
+
+  assert.equal(changelog.status, 200);
+  assert.match(changelog.body, /v1\.0\.2/);
+  assert.match(changelog.body, /Stable Core/);
+  assert.match(changelog.body, /Patch releases/);
+  assert.match(changelog.body, /Visibility &amp; Planning/);
+
+  assert.equal(roadmap.status, 200);
+  assert.match(roadmap.body, /v1\.1\.0/);
+  assert.match(roadmap.body, /Share Flow/);
+  assert.match(roadmap.body, /Flexible Access/);
+  assert.match(roadmap.body, /Platform Expansion/);
+  assert.match(roadmap.body, /Transport Layer/);
+  assert.match(roadmap.body, /Request a feature/);
+  assert.match(roadmap.body, /mailto:hello@paperfrogs\.dev\?subject=BurnLink%20Feature%20Request/);
 });
 
 test("comparison pages render with SEO and CTA content", async () => {
@@ -114,6 +149,16 @@ test("comparison pages include related alternatives and shared footer links", as
   assert.match(response.body, /BurnLink vs SwissTransfer/);
   assert.match(response.body, /<h3>Comparisons<\/h3>/);
   assert.match(response.body, /href="\/comparisons\/wetransfer"/);
+});
+
+test("footer product section links to changelog and roadmap", async () => {
+  const response = await request("/");
+
+  assert.equal(response.status, 200);
+  assert.match(response.body, /<h3>Product<\/h3>/);
+  assert.match(response.body, /href="\/changelog"/);
+  assert.match(response.body, /href="\/roadmap"/);
+  assert.doesNotMatch(response.body, /<a href="\/">Share files<\/a>/);
 });
 
 test("unknown comparison slugs return the existing not found page", async () => {

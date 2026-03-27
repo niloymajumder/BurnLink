@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo1.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BurnLink roadmap: current release line, planned feature bundles, and the next version milestones for secure ephemeral sharing."
+    />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta property="og:title" content="Roadmap - BurnLink" />
+    <meta
+      property="og:description"
+      content="See what BurnLink is building next across UX, access controls, and platform expansion."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= canonicalUrl %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Roadmap - BurnLink" />
+    <meta
+      name="twitter:description"
+      content="Track BurnLink’s current release line and planned features across upcoming versions."
+    />
+    <link rel="canonical" href="<%= canonicalUrl %>" />
+    <title>Roadmap - BurnLink</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(235, 88, 61, 0.1), transparent 26%),
+          #0a0a0a;
+        color: #fff;
+        line-height: 1.6;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+      header {
+        padding: 1.75rem 0;
+        border-bottom: 1px solid #1e1e1e;
+        position: sticky;
+        top: 0;
+        background: #0a0a0a;
+        z-index: 100;
+      }
+      .header-content { display: flex; justify-content: space-between; align-items: center; }
+      .logo { text-decoration: none; display: flex; align-items: center; }
+      .logo img { height: 45px; width: auto; display: block; }
+      nav { display: flex; gap: 2.5rem; }
+      nav a {
+        text-decoration: none;
+        color: #666;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      nav a:hover, nav a.active { color: #fff; }
+      footer { border-top: 1px solid #1e1e1e; padding: 3rem 0; }
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .footer-section h3 {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #555;
+      }
+      .footer-section a {
+        display: block;
+        color: #777;
+        text-decoration: none;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        transition: color 0.2s;
+      }
+      .footer-section a:hover { color: #fff; }
+      .footer-bottom {
+        border-top: 1px solid #1e1e1e;
+        padding-top: 1.5rem;
+        color: #444;
+        font-size: 0.78rem;
+      }
+      main { padding: 0 0 5rem; }
+      .hero { padding: 7rem 0 2.8rem; }
+      .eyebrow {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #eb583d;
+        margin-bottom: 0.9rem;
+      }
+      .hero h1 {
+        font-size: clamp(3rem, 6vw, 4.6rem);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+        max-width: 760px;
+        margin-bottom: 0.95rem;
+      }
+      .hero p {
+        max-width: 640px;
+        color: #878787;
+        font-size: 1rem;
+        line-height: 1.55;
+        margin-bottom: 1.35rem;
+      }
+      .hero-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.9rem 1.55rem;
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 0;
+        transition: opacity 0.2s ease, border-color 0.2s ease;
+      }
+      .btn:hover { opacity: 0.88; }
+      .btn-primary { background: #eb583d; color: #000; }
+      .btn-ghost { border: 1px solid #2b2b2b; color: #d8d8d8; }
+      .top-panel {
+        margin: 1rem 0 2rem;
+        padding: 1.15rem 1.2rem;
+        border: 1px solid #1f1f1f;
+        background: rgba(15, 15, 15, 0.82);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .top-panel strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.86rem;
+      }
+      .top-panel p {
+        color: #7f7f7f;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        max-width: 760px;
+      }
+      .top-panel a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.85rem 1rem;
+        border: 1px solid #2b2b2b;
+        white-space: nowrap;
+      }
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        align-items: start;
+      }
+      .column {
+        border: 1px solid #1f1f1f;
+        background:
+          linear-gradient(180deg, rgba(18, 18, 18, 0.95), rgba(11, 11, 11, 0.98));
+        min-height: 100%;
+      }
+      .column-head {
+        padding: 1.3rem 1.3rem 1.05rem;
+        border-bottom: 1px solid #1b1b1b;
+      }
+      .column-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.38rem 0.62rem;
+        border: 1px solid rgba(235, 88, 61, 0.25);
+        color: #eb583d;
+        background: rgba(235, 88, 61, 0.08);
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.85rem;
+      }
+      .column-head h2 {
+        font-size: 1.15rem;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.45rem;
+      }
+      .column-head p {
+        color: #7c7c7c;
+        font-size: 0.88rem;
+        line-height: 1.55;
+      }
+      .column-stack {
+        padding: 1rem;
+        display: grid;
+        gap: 1rem;
+      }
+      .roadmap-card {
+        border: 1px solid #212121;
+        background:
+          radial-gradient(circle at top left, rgba(235, 88, 61, 0.12), transparent 40%),
+          #111;
+      }
+      .card-frame {
+        padding: 1.35rem;
+      }
+      .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.8rem;
+      }
+      .version-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.36rem 0.62rem;
+        border: 1px solid #2a2a2a;
+        color: #eb583d;
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .eta {
+        color: #727272;
+        font-size: 0.73rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .roadmap-card h3 {
+        font-size: 1.14rem;
+        line-height: 1.24;
+        letter-spacing: -0.02em;
+        margin-bottom: 0.5rem;
+      }
+      .roadmap-card p {
+        color: #8a8a8a;
+        font-size: 0.91rem;
+        line-height: 1.58;
+      }
+      .feature-list {
+        list-style: none;
+        display: grid;
+        gap: 0.55rem;
+        margin-top: 1rem;
+      }
+      .feature-list li {
+        color: #a8a8a8;
+        font-size: 0.9rem;
+        line-height: 1.72;
+      }
+      .feature-list li::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: #eb583d;
+        display: inline-block;
+        margin-right: 0.7rem;
+        transform: translateY(-2px);
+      }
+      .request-panel {
+        margin-top: 2rem;
+        padding: 1.3rem 1.4rem;
+        border: 1px solid #1f1f1f;
+        background:
+          radial-gradient(circle at top right, rgba(235, 88, 61, 0.12), transparent 36%),
+          rgba(15, 15, 15, 0.82);
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .request-panel strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 0.92rem;
+      }
+      .request-panel p {
+        color: #7f7f7f;
+        font-size: 0.9rem;
+        line-height: 1.55;
+        max-width: 720px;
+      }
+      @media (max-width: 980px) {
+        .board {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 768px) {
+        nav { gap: 1.5rem; }
+        .header-content { flex-wrap: wrap; gap: 1rem; }
+        .footer-content { grid-template-columns: 1fr; gap: 1.5rem; }
+        .hero { padding: 4.5rem 0 2.5rem; }
+      }
+      @media (max-width: 560px) {
+        .container { padding: 0 1rem; }
+        .logo img { height: 38px; }
+        .hero-actions { flex-direction: column; align-items: stretch; }
+        .btn { text-align: center; }
+      }
+    </style>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "733fae826e624a4badabf309aea4d629"}'></script>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="e4df83ef-9f58-4f9b-9d4b-cee378637ed7"></script>
+  </head>
+  <body>
+    <%- include("partials/header", { activePage: "roadmap" }) %>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="eyebrow">BurnLink Roadmap</div>
+          <h1>What we are building next, in a public roadmap format.</h1>
+          <p>
+            BurnLink is on a mission to make secure ephemeral sharing accessible to everyone. This roadmap is meant to give a clear picture of what we are building, how we are prioritizing features, and where we are in the release process. We want to make planning more transparent, not more closed off.
+          </p>
+          <div class="hero-row">
+            <div class="hero-actions">
+              <a
+                href="mailto:hello@paperfrogs.dev?subject=BurnLink%20Feature%20Request"
+                class="btn btn-primary"
+                >Request a feature</a
+              >
+              <a href="/changelog" class="btn btn-ghost">Read changelog</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="top-panel">
+            <div>
+              <strong>How we are using this structure</strong>
+              <p>
+                BurnLink is better served by a public roadmap board than a second
+                changelog-style timeline. For roadmap, this structure makes status,
+                release trains, and feature requests easier to scan at a glance.
+              </p>
+            </div>
+            <a href="/">Use BurnLink</a>
+          </div>
+
+          <div class="board">
+            <% roadmapColumns.forEach(function (column) { %>
+              <section class="column">
+                <div class="column-head">
+                  <span class="column-chip"><%= column.status %></span>
+                  <h2><%= column.status %></h2>
+                  <p><%= column.description %></p>
+                </div>
+                <div class="column-stack">
+                  <% column.items.forEach(function (item) { %>
+                    <article class="roadmap-card">
+                      <div class="card-frame">
+                        <div>
+                          <div class="card-meta">
+                            <span class="version-chip"><%= item.version %></span>
+                            <span class="eta"><%= item.eta %></span>
+                          </div>
+                          <h3><%= item.name %></h3>
+                          <p><%= item.summary %></p>
+                          <ul class="feature-list">
+                            <% item.features.forEach(function (feature) { %>
+                              <li><%= feature %></li>
+                            <% }); %>
+                          </ul>
+                        </div>
+                      </div>
+                    </article>
+                  <% }); %>
+                </div>
+              </section>
+            <% }); %>
+          </div>
+
+          <div class="request-panel">
+            <div>
+              <strong>Want something on the roadmap?</strong>
+              <p>
+                If there is a workflow, integration, or security feature you want
+                BurnLink to support, send it over. This page is meant to make
+                planning more transparent, not more closed off.
+              </p>
+            </div>
+            <a
+              href="mailto:hello@paperfrogs.dev?subject=BurnLink%20Feature%20Request"
+              class="btn btn-primary"
+              >Request a feature</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <%- include("partials/footer", { showProductHuntBadge: true, showOpenSourceLink: false }) %>
+  </body>
+</html>

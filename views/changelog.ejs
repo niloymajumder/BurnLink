@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo1.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BurnLink changelog: track shipped releases, version naming, and product updates behind the secure file-sharing platform."
+    />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta property="og:title" content="Changelog - BurnLink" />
+    <meta
+      property="og:description"
+      content="See what BurnLink shipped, how releases are versioned, and what changed across the Stable Core line."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="<%= canonicalUrl %>" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Changelog - BurnLink" />
+    <meta
+      name="twitter:description"
+      content="Track BurnLink releases, shipped features, and the public versioning model."
+    />
+    <link rel="canonical" href="<%= canonicalUrl %>" />
+    <title>Changelog - BurnLink</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(235, 88, 61, 0.1), transparent 28%),
+          #0a0a0a;
+        color: #fff;
+        line-height: 1.6;
+        overflow-x: hidden;
+        min-height: 100vh;
+      }
+      .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
+      header {
+        padding: 1.75rem 0;
+        border-bottom: 1px solid #1e1e1e;
+        position: sticky;
+        top: 0;
+        background: #0a0a0a;
+        z-index: 100;
+      }
+      .header-content { display: flex; justify-content: space-between; align-items: center; }
+      .logo { text-decoration: none; display: flex; align-items: center; }
+      .logo img { height: 45px; width: auto; display: block; }
+      nav { display: flex; gap: 2.5rem; }
+      nav a {
+        text-decoration: none;
+        color: #666;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: color 0.2s;
+      }
+      nav a:hover, nav a.active { color: #fff; }
+      footer { border-top: 1px solid #1e1e1e; padding: 3rem 0; }
+      .footer-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .footer-section h3 {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #555;
+      }
+      .footer-section a {
+        display: block;
+        color: #777;
+        text-decoration: none;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+        transition: color 0.2s;
+      }
+      .footer-section a:hover { color: #fff; }
+      .footer-bottom {
+        border-top: 1px solid #1e1e1e;
+        padding-top: 1.5rem;
+        color: #444;
+        font-size: 0.78rem;
+      }
+      main { padding: 0 0 5rem; }
+      .hero { padding: 7rem 0 3rem; }
+      .eyebrow {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #eb583d;
+        margin-bottom: 1.2rem;
+      }
+      .hero h1 {
+        font-size: clamp(3rem, 6vw, 4.6rem);
+        line-height: 0.95;
+        letter-spacing: -0.05em;
+        max-width: 720px;
+        margin-bottom: 1.25rem;
+      }
+      .hero p {
+        max-width: 600px;
+        color: #878787;
+        font-size: 1rem;
+        line-height: 1.55;
+        margin-bottom: 1.8rem;
+      }
+      .hero-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .hero-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-block;
+        padding: 0.9rem 1.55rem;
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 0;
+        transition: opacity 0.2s ease, border-color 0.2s ease;
+      }
+      .btn:hover { opacity: 0.88; }
+      .btn-primary { background: #eb583d; color: #000; }
+      .btn-ghost { border: 1px solid #2b2b2b; color: #d8d8d8; }
+      .release-line-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.74rem 1rem;
+        border: 1px solid #1f1f1f;
+        border-radius: 999px;
+        background: rgba(17, 17, 17, 0.72);
+        color: #9a9a9a;
+        font-size: 0.78rem;
+      }
+      .release-line-note .dot {
+        width: 6px;
+        height: 6px;
+        background: #eb583d;
+        border-radius: 999px;
+        box-shadow: 0 0 16px rgba(235, 88, 61, 0.8);
+      }
+      .release-line-note strong { color: #fff; }
+      .timeline {
+        position: relative;
+        --timeline-date-column: 132px;
+        --timeline-gap: 3rem;
+        --timeline-axis: calc(var(--timeline-date-column) + 36px);
+        --timeline-dot-size: 14px;
+        --timeline-dot-half: 7px;
+        --timeline-dot-top: 0.3rem;
+        margin-top: 1rem;
+      }
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: var(--timeline-axis);
+        top: calc(var(--timeline-dot-top) + var(--timeline-dot-half));
+        bottom: 8px;
+        width: 1px;
+        background: linear-gradient(180deg, rgba(235, 88, 61, 0.7), rgba(255, 255, 255, 0.06) 24%, rgba(255, 255, 255, 0.06) 100%);
+      }
+      .timeline-item {
+        position: relative;
+        display: grid;
+        grid-template-columns: var(--timeline-date-column) minmax(0, 1fr);
+        column-gap: var(--timeline-gap);
+        padding: 0 0 5rem;
+      }
+      .timeline-item::before {
+        content: "";
+        position: absolute;
+        left: calc(var(--timeline-axis) - var(--timeline-dot-half));
+        top: var(--timeline-dot-top);
+        width: var(--timeline-dot-size);
+        height: var(--timeline-dot-size);
+        border-radius: 999px;
+        background: #121212;
+        border: 1px solid #363636;
+        z-index: 2;
+      }
+      .timeline-item.current::after {
+        content: "";
+        position: absolute;
+        left: calc(var(--timeline-axis) - 16px);
+        top: calc(var(--timeline-dot-top) - 9px);
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        background: radial-gradient(circle, rgba(235, 88, 61, 0.46) 0%, rgba(235, 88, 61, 0.18) 48%, rgba(235, 88, 61, 0.04) 74%, transparent 100%);
+        filter: blur(6px);
+        z-index: 1;
+        pointer-events: none;
+        animation: timelineGlowPulse 2.8s ease-in-out infinite;
+      }
+      .timeline-item:last-child {
+        padding-bottom: 0;
+      }
+      .timeline-date {
+        text-align: right;
+        padding-top: 0.05rem;
+      }
+      .timeline-date time {
+        display: inline-block;
+        color: #777;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .timeline-dot {
+        display: none;
+      }
+      .timeline-item.current::before {
+        background: #eb583d;
+        border-color: rgba(235, 88, 61, 0.7);
+        box-shadow:
+          0 0 0 8px rgba(235, 88, 61, 0.1),
+          0 0 24px rgba(235, 88, 61, 0.85);
+        animation: timelineDotPulse 2.8s ease-in-out infinite;
+      }
+      .timeline-item.current .timeline-date time {
+        color: #f2f2f2;
+      }
+      .release-content {
+        min-width: 0;
+        padding-left: 0.9rem;
+      }
+      @keyframes timelineDotPulse {
+        0%,
+        100% {
+          box-shadow:
+            0 0 0 7px rgba(235, 88, 61, 0.14),
+            0 0 18px rgba(235, 88, 61, 0.72);
+        }
+        50% {
+          box-shadow:
+            0 0 0 11px rgba(235, 88, 61, 0.06),
+            0 0 30px rgba(235, 88, 61, 0.98);
+        }
+      }
+      @keyframes timelineGlowPulse {
+        0%,
+        100% {
+          transform: scale(0.9);
+          opacity: 0.72;
+        }
+        50% {
+          transform: scale(1.14);
+          opacity: 1;
+        }
+      }
+      .release-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.36rem 0.62rem;
+        border-radius: 999px;
+        border: 1px solid #2a2a2a;
+        color: #eb583d;
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 0.9rem;
+      }
+      .release-content h2 {
+        font-size: clamp(2rem, 4vw, 3.15rem);
+        line-height: 1;
+        letter-spacing: -0.045em;
+        margin-bottom: 1rem;
+      }
+      .release-lede {
+        max-width: 720px;
+        color: #d7d7d7;
+        font-size: 1.08rem;
+        line-height: 1.58;
+        margin-bottom: 1.15rem;
+      }
+      .release-copy {
+        max-width: 740px;
+        display: grid;
+        gap: 0.9rem;
+        margin-bottom: 1.35rem;
+      }
+      .release-copy p {
+        color: #868686;
+        font-size: 0.97rem;
+        line-height: 1.58;
+      }
+      .media-frame {
+        margin-bottom: 1.4rem;
+        border: 1px solid #1f1f1f;
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at top left, rgba(235, 88, 61, 0.14), transparent 34%),
+          linear-gradient(180deg, #141414 0%, #101010 100%);
+      }
+      .media-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1rem 0;
+        flex-wrap: wrap;
+      }
+      .media-kind,
+      .media-label {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.38rem 0.62rem;
+        border-radius: 999px;
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .media-kind {
+        border: 1px solid rgba(235, 88, 61, 0.25);
+        color: #eb583d;
+        background: rgba(235, 88, 61, 0.08);
+      }
+      .media-label {
+        border: 1px solid #262626;
+        color: #8b8b8b;
+      }
+      .media-shell {
+        padding: 1rem;
+        display: block;
+      }
+      .launch-poster {
+        position: relative;
+        min-height: 340px;
+        border-radius: 22px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        background:
+          radial-gradient(circle at 28% 22%, rgba(255, 145, 94, 0.72), transparent 20%),
+          radial-gradient(circle at 68% 20%, rgba(255, 145, 94, 0.72), transparent 20%),
+          radial-gradient(circle at 50% 55%, rgba(255, 123, 77, 0.22), transparent 34%),
+          linear-gradient(180deg, #3b241f 0%, #1a1114 52%, #0d0b0f 100%);
+      }
+      .launch-poster.preview {
+        background:
+          radial-gradient(circle at 22% 24%, rgba(255, 145, 94, 0.34), transparent 18%),
+          radial-gradient(circle at 78% 24%, rgba(255, 145, 94, 0.22), transparent 18%),
+          linear-gradient(180deg, #171417 0%, #101114 58%, #0b0b0d 100%);
+      }
+      .launch-poster.asset {
+        min-height: 0;
+        background: #0d0b0f;
+      }
+      .launch-poster::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0.26;
+        background-image:
+          linear-gradient(rgba(255, 138, 99, 0.45) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 138, 99, 0.45) 1px, transparent 1px);
+        background-size: 96px 96px;
+      }
+      .launch-poster::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle, rgba(255, 255, 255, 0.18) 0.6px, transparent 0.8px);
+        background-size: 3px 3px;
+        opacity: 0.16;
+        mix-blend-mode: screen;
+      }
+      .launch-frame {
+        position: absolute;
+        inset: 22px;
+        border: 1px solid rgba(255, 157, 122, 0.28);
+        pointer-events: none;
+      }
+      .launch-inner {
+        position: relative;
+        z-index: 1;
+        min-height: 340px;
+        padding: 2rem 2.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        text-align: center;
+      }
+      .launch-flame {
+        font-size: 4rem;
+        line-height: 1;
+        color: #ff6948;
+        margin-bottom: 0.55rem;
+        text-shadow: 0 0 18px rgba(255, 105, 72, 0.28);
+      }
+      .launch-wordmark {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(2.9rem, 5vw, 4.5rem);
+        line-height: 0.95;
+        letter-spacing: -0.045em;
+        color: #f8e6db;
+        margin-bottom: 0.45rem;
+      }
+      .launch-sub {
+        color: #f0beb0;
+        font-size: 0.95rem;
+        margin-bottom: 0.55rem;
+      }
+      .launch-top {
+        min-height: 64px;
+        width: 100%;
+      }
+      .launch-center {
+        display: flex;
+        flex: 1;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      .launch-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.48rem 0.82rem;
+        border: 1px solid rgba(255, 123, 77, 0.58);
+        color: #ff7b58;
+        background: rgba(31, 17, 18, 0.4);
+        font-size: 0.74rem;
+        font-weight: 700;
+        margin-bottom: 0;
+      }
+      .launch-badge .ph-dot {
+        width: 1.55rem;
+        height: 1.55rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #ff6d4c;
+        color: #fff4ef;
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+      .launch-overlay {
+        position: relative;
+        width: calc(100% + 1rem);
+        margin: 0 -0.5rem -0.5rem;
+        padding: 2.4rem 1.35rem 1.2rem;
+        background:
+          linear-gradient(180deg, rgba(8, 8, 10, 0) 0%, rgba(8, 8, 10, 0.5) 20%, rgba(8, 8, 10, 0.88) 62%, rgba(8, 8, 10, 0.96) 100%);
+        backdrop-filter: blur(14px);
+        text-align: left;
+      }
+      .launch-overlay strong {
+        display: block;
+        color: #fff2ec;
+        font-size: 1.3rem;
+        line-height: 1.18;
+        letter-spacing: -0.03em;
+        margin-bottom: 0.45rem;
+      }
+      .launch-overlay p {
+        max-width: 560px;
+        color: #cfb0a4;
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+      .launch-poster.preview .launch-top {
+        min-height: 26px;
+      }
+      .launch-poster.preview .launch-flame {
+        font-size: 3rem;
+        margin-bottom: 0.35rem;
+      }
+      .launch-poster.preview .launch-wordmark {
+        font-size: clamp(2.35rem, 4vw, 3.3rem);
+        margin-bottom: 0.8rem;
+      }
+      .launch-poster.preview .launch-badge {
+        border-color: rgba(255, 145, 105, 0.34);
+        color: #ffb198;
+      }
+      .launch-poster.preview .launch-badge .ph-dot {
+        background: rgba(255, 123, 88, 0.16);
+        border: 1px solid rgba(255, 123, 88, 0.42);
+        color: #ff8967;
+      }
+      .asset-picture,
+      .asset-picture img {
+        display: block;
+        width: 100%;
+      }
+      .asset-picture img {
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+      }
+      .release-highlights {
+        list-style: none;
+        display: grid;
+        gap: 0.58rem;
+        margin-bottom: 0.95rem;
+      }
+      .release-highlights li {
+        color: #a9a9a9;
+        font-size: 0.94rem;
+        line-height: 1.72;
+      }
+      .release-highlights li::before {
+        content: "";
+        width: 5px;
+        height: 5px;
+        background: #eb583d;
+        display: inline-block;
+        margin-right: 0.7rem;
+        transform: translateY(-2px);
+      }
+      .release-note {
+        max-width: 740px;
+        color: #6f6f6f;
+        font-size: 0.86rem;
+        line-height: 1.55;
+      }
+      @media (max-width: 900px) {
+        .timeline {
+          --timeline-axis: 8px;
+          --timeline-dot-top: 0.15rem;
+        }
+        .timeline::before {
+          left: var(--timeline-axis);
+        }
+        .timeline-item {
+          grid-template-columns: 1fr;
+          column-gap: 0;
+          padding-left: 2.1rem;
+        }
+        .timeline-date {
+          text-align: left;
+          margin-bottom: 1rem;
+        }
+        .release-content {
+          padding-left: 0.3rem;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .timeline-item.current::before,
+        .timeline-item.current::after {
+          animation: none;
+        }
+      }
+      @media (max-width: 768px) {
+        nav { gap: 1.5rem; }
+        .header-content { flex-wrap: wrap; gap: 1rem; }
+        .footer-content { grid-template-columns: 1fr; gap: 1.5rem; }
+        .hero { padding: 4.5rem 0 2.5rem; }
+      }
+      @media (max-width: 560px) {
+        .container { padding: 0 1rem; }
+        .logo img { height: 38px; }
+        .hero-actions { flex-direction: column; align-items: stretch; }
+        .btn { text-align: center; }
+      }
+    </style>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "733fae826e624a4badabf309aea4d629"}'></script>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="e4df83ef-9f58-4f9b-9d4b-cee378637ed7"></script>
+  </head>
+  <body>
+    <%- include("partials/header", { activePage: "changelog" }) %>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="eyebrow">BurnLink Changelog</div>
+          <h1>Latest releases first. Older releases below.</h1>
+          <p>
+            A minimal release history for what changed in BurnLink, with the
+            newest release highlighted first and older work tracked down the line.
+          </p>
+          <div class="hero-row">
+            <div class="hero-actions">
+              <a href="/roadmap" class="btn btn-primary">View roadmap</a>
+              <a href="/" class="btn btn-ghost">Use BurnLink</a>
+            </div>
+            <div class="release-line-note">
+              <span class="dot" aria-hidden="true"></span>
+              <strong><%= changelogEntries[0].version %></strong>
+              <span>Current release on the Stable Core line</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="container">
+          <div class="timeline">
+            <% changelogEntries.forEach(function (entry, index) { %>
+              <article class="timeline-item <%= index === 0 ? "current" : "" %>">
+                <div class="timeline-date">
+                  <time datetime="<%= entry.date %>"><%= entry.date %></time>
+                  <span class="timeline-dot" aria-hidden="true"></span>
+                </div>
+                <div class="release-content">
+                  <span class="release-chip"><%= entry.version %></span>
+                  <h2><%= entry.name %></h2>
+                  <p class="release-lede"><%= entry.lede || entry.summary %></p>
+
+                  <% if (entry.media) { %>
+                    <div class="media-frame">
+                      <div class="media-toolbar">
+                        <span class="media-kind"><%= entry.media.kind %></span>
+                        <span class="media-label"><%= entry.media.eyebrow %></span>
+                      </div>
+                      <div class="media-shell">
+                        <% if (entry.media.variant === "launch-poster") { %>
+                          <% if (entry.media.asset) { %>
+                            <div class="launch-poster asset">
+                              <picture class="asset-picture">
+                                <% if (entry.media.asset.webp) { %>
+                                  <source srcset="<%= entry.media.asset.webp %>" type="image/webp" />
+                                <% } %>
+                                <img src="<%= entry.media.asset.png %>" alt="<%= entry.media.asset.alt %>" loading="lazy" />
+                              </picture>
+                            </div>
+                          <% } else { %>
+                            <div class="launch-poster <%= entry.name === 'Stable Core' ? '' : 'preview' %>">
+                              <div class="launch-frame" aria-hidden="true"></div>
+                              <div class="launch-inner">
+                                <div class="launch-top"></div>
+                                <div class="launch-center">
+                                  <div class="launch-flame" aria-hidden="true">♨</div>
+                                  <div class="launch-wordmark">BurnLink</div>
+                                  <% if (entry.name === "Stable Core") { %>
+                                    <div class="launch-sub">Launched on</div>
+                                  <% } %>
+                                  <div class="launch-badge">
+                                    <span class="ph-dot"><%= entry.name === "Stable Core" ? "P" : (entry.media.kind === "video" ? "▶" : "●") %></span>
+                                    <span><%= entry.name === "Stable Core" ? "Find us on Product Hunt" : entry.media.eyebrow %></span>
+                                  </div>
+                                </div>
+                                <div class="launch-overlay">
+                                  <strong><%= entry.media.title %></strong>
+                                  <p><%= entry.media.description %></p>
+                                  <% if (entry.name === "Stable Core") { %>
+                                    <p style="margin-top:0.9rem;font-size:0.76rem;color:#ff9e85;">
+                                      https://burnlink.page
+                                      <span style="color:#ffd9ce;padding:0 0.45rem;">|</span>
+                                      Paperfrogs/Open
+                                    </p>
+                                  <% } %>
+                                </div>
+                              </div>
+                            </div>
+                          <% } %>
+                        <% } else { %>
+                          <div class="launch-poster preview">
+                            <div class="launch-frame" aria-hidden="true"></div>
+                            <div class="launch-inner">
+                              <div class="launch-top"></div>
+                              <div class="launch-center">
+                                <div class="launch-flame" aria-hidden="true">♨</div>
+                                <div class="launch-wordmark">BurnLink</div>
+                                <div class="launch-badge">
+                                  <span class="ph-dot"><%= entry.media.kind === "video" ? "▶" : "●" %></span>
+                                  <span><%= entry.media.eyebrow %></span>
+                                </div>
+                              </div>
+                              <div class="launch-overlay">
+                                <strong><%= entry.media.title %></strong>
+                                <p><%= entry.media.description %></p>
+                              </div>
+                            </div>
+                          </div>
+                        <% } %>
+                      </div>
+                    </div>
+                  <% } %>
+
+                  <% if (entry.body && entry.body.length) { %>
+                    <div class="release-copy">
+                      <% entry.body.forEach(function (paragraph) { %>
+                        <p><%= paragraph %></p>
+                      <% }); %>
+                    </div>
+                  <% } %>
+
+                  <ul class="release-highlights">
+                    <% entry.highlights.forEach(function (highlight) { %>
+                      <li><%= highlight %></li>
+                    <% }); %>
+                  </ul>
+
+                  <p class="release-note"><%= entry.notes %></p>
+                </div>
+              </article>
+            <% }); %>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <%- include("partials/footer", { showProductHuntBadge: true, showOpenSourceLink: false }) %>
+  </body>
+</html>

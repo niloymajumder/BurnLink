@@ -127,7 +127,7 @@
       .intro {
         font-size: 0.95rem;
         color: #888;
-        line-height: 1.8;
+        line-height: 1.55;
         margin-bottom: 3rem;
       }
       h2 {
@@ -179,7 +179,7 @@
       .contact-box p {
         font-size: 0.85rem;
         color: #888;
-        line-height: 1.8;
+        line-height: 1.55;
         margin-bottom: 0.75rem;
       }
       .contact-box a {
@@ -244,7 +244,7 @@
         padding: 1rem 1.25rem;
         font-size: 0.83rem;
         color: #cccc00;
-        line-height: 1.7;
+        line-height: 1.55;
         margin-top: 2rem;
       }
       .cta-row {
@@ -336,17 +336,7 @@
     <!-- End Umami Analytics -->
   </head>
   <body>
-    <header>
-      <div class="container">
-        <div class="header-content">
-          <a href="/" class="logo"><img src="/logo1.png" alt="BurnLink" /></a>
-          <nav>
-            <a href="/">Home</a>
-            <a href="/about">About</a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <%- include("partials/header", { activePage: "" }) %>
 
     <main>
       <div class="container">
@@ -489,7 +479,7 @@
           </div>
 
           <h2>Hall of Fame</h2>
-          <p style="font-size: 0.875rem; color: #888; line-height: 1.8">
+          <p style="font-size: 0.875rem; color: #888; line-height: 1.55">
             Security researchers who responsibly disclosed valid vulnerabilities
             and helped make BurnLink safer are recognized on our dedicated Hall
             of Fame page, along with the full findings log.

@@ -102,7 +102,7 @@
       .hero-sub {
         font-size: 1rem;
         color: #777;
-        line-height: 1.85;
+        line-height: 1.55;
         max-width: 540px;
         margin-bottom: 2.5rem;
       }
@@ -157,7 +157,7 @@
       .section-sub {
         font-size: 0.9rem;
         color: #666;
-        line-height: 1.8;
+        line-height: 1.55;
         max-width: 500px;
         margin-bottom: 3rem;
       }
@@ -195,7 +195,7 @@
       .step p {
         font-size: 0.82rem;
         color: #666;
-        line-height: 1.7;
+        line-height: 1.55;
       }
       .step::after {
         content: "";
@@ -246,7 +246,7 @@
       .feature p {
         font-size: 0.82rem;
         color: #666;
-        line-height: 1.75;
+        line-height: 1.58;
       }
 
       /* ── Tech breakdown ── */
@@ -293,7 +293,7 @@
       .tech-note p {
         font-size: 0.82rem;
         color: #666;
-        line-height: 1.8;
+        line-height: 1.58;
       }
       .tech-note p + p {
         margin-top: 0.75rem;
@@ -327,7 +327,7 @@
       .principle p {
         font-size: 0.82rem;
         color: #666;
-        line-height: 1.75;
+        line-height: 1.58;
       }
 
       /* ── Stats strip ── */
@@ -485,17 +485,7 @@
     <!-- End Umami Analytics -->
   </head>
   <body>
-    <header>
-      <div class="container">
-        <div class="header-content">
-          <a href="/" class="logo"><img src="/logo1.png" alt="BurnLink" /></a>
-          <nav>
-            <a href="/">Home</a>
-            <a href="/about" class="active">About</a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <%- include("partials/header", { activePage: "about" }) %>
 
     <!-- ── Hero ────────────────────────────────────────────────── -->
     <div class="hero">
